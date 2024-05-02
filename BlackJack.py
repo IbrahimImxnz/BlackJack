@@ -56,9 +56,11 @@ class Player:
         print("Money deposited")        
 
 game_on = True
+choices = True
 
 while game_on: 
     deck = Deck()
+    deck.shuffle()
     balance = int(input("How much is your balance?"))
     player = Player(balance)
     dealer = Player(0)
@@ -69,23 +71,66 @@ while game_on:
 
     for i in range(2):
         player.hit(deck.deal_one())
-        dealer.hit(deck.deal_one())
+
+    print(f"Player's 2 cards are: {player.cards[0]} and {player.cards[1]}")    
+
+    dealer.hit(deck.deal_one())    
+    
+    print(f"Dealer's face up card is: {dealer.cards[0]}")
         
-    if player.cards[0] + player.cards[1] == 21 and dealer.cards[0] + dealer.cards[1] == 21:
-        print("Push! You did not lose your bet, but you did not win the game!")
-        player.deposit(betting_amount)
-        choices = True
+    if player.cards[0].value + player.cards[1].value == 21:
+        dealer.hit(deck.deal_one())
+        print(f"Dealer's face down card was: {dealer.cards[1]}")
+
+        if dealer.cards[0].value + dealer.cards[1].value == 21:
+            print("Push! You did not lose your bet, but you did not win the game!")
+            player.deposit(betting_amount)
+        elif dealer.cards[0].value + dealer.cards[1].value != 21: 
+            print("BLACKJACK! You get double your bet back!")
+            player.deposit(betting_amount*2)     
         while choices:
-            choice = input("play again or quit?")
-            if choice == "play again":
-                choices = False
-                continue
-            elif choice == "quit":
-                choices = False
-                game_on = False
-                break
-            else:
-                print("please type either play again or quit")
+                choice = input("play again or quit?")
+                if choice == "play again":
+                    choices = False
+                    continue
+                elif choice == "quit":
+                        choices = False
+                        game_on = False
+                        break
+                else:
+                    print("please type either play again or quit")
+    elif player.cards[0].value + player.cards[1].value != 21:
+        choice = input("Would you like to hit or stay")
+        if choice == "hit":
+            player.hit(deck.deal_one())
+            print(f"The card that you got was: {player.cards[2]}")
+            if player.cards[0].value + player.cards[1].value + player.cards[2].value == 21:
+                print("BLACKJACK! Player wins double his bet back!")
+                player.deposit(betting_amount*2)
+            
+            if player.cards[0].value + player.cards[1].value + player.cards[2].value > 21:
+                print("Bust! Player loses his bet")
+            elif player.cards[0].value + player.cards[1].value + player.cards[2].value < 21:
+                dealer.hit(deck.deal_one()) 
+                dealer.hit(deck.deal_one())
+                print(f"Dealer's face down card was: {dealer.cards[1]}")
+                print(f"Dealer's pulled card is: {dealer.cards[2]}")
+                if dealer.cards[0].value + dealer.cards[1].value + dealer.cards[2].value > 21:
+                    print("Dealer busted! Player gets double bet back")
+                    player.deposit(betting_amount*2)
+                elif player.cards[0].value + player.cards[1].value + player.cards[2].value > dealer.cards[0].value + dealer.cards[1].value + dealer.cards[2].value:
+                    print("Player wins double his bet back!")
+                    player.deposit(betting_amount*2)
+                else:
+                    print("Dealer Wins! Players loses his bet")    
+
+        if choice == "stay":
+            dealer.hit(deck.deal_one()) 
+            print(f"Dealer's face down card was: {dealer.cards[1]}")
+            
+
+        
+
 
 
 
