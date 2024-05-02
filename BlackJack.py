@@ -100,36 +100,84 @@ while game_on:
                 else:
                     print("please type either play again or quit")
     elif player.cards[0].value + player.cards[1].value != 21:
-        choice = input("Would you like to hit or stay")
-        if choice == "hit":
-            player.hit(deck.deal_one())
-            print(f"The card that you got was: {player.cards[2]}")
-            if player.cards[0].value + player.cards[1].value + player.cards[2].value == 21:
-                print("BLACKJACK! Player wins double his bet back!")
-                player.deposit(betting_amount*2)
-            
-            if player.cards[0].value + player.cards[1].value + player.cards[2].value > 21:
-                print("Bust! Player loses his bet")
-            elif player.cards[0].value + player.cards[1].value + player.cards[2].value < 21:
+        play = True
+        while play:
+            choice = input("Would you like to hit or stay")
+            if choice == "hit":
+                player.hit(deck.deal_one())
+                print(f"The card that you got was: {player.cards[2]}")
+                if player.cards[0].value + player.cards[1].value + player.cards[2].value == 21:
+                    print("BLACKJACK! Player wins double his bet back!")
+                    player.deposit(betting_amount*2)
+                
+                if player.cards[0].value + player.cards[1].value + player.cards[2].value > 21:
+                    print("Bust! Player loses his bet")
+                elif player.cards[0].value + player.cards[1].value + player.cards[2].value < 21:
+                    dealer.hit(deck.deal_one()) 
+                
+                    print(f"Dealer's face down card was: {dealer.cards[1]}")
+
+                    sum = 0
+                    for i in dealer.cards:
+                        sum += dealer.cards[i].value
+
+                    if sum < 17:    
+                        while sum < 17:
+                            dealer.hit(deck.deal_one())
+                            for i in dealer.cards:
+                                sum += dealer.cards[i].value
+
+                            for i in dealer.cards:
+                                print(f"Dealer's pulled card is: {dealer.cards[i]}")
+
+                    if sum > 21:
+                        print("Dealer busted! Player gets double bet back")
+                        player.deposit(betting_amount*2)
+                    elif player.cards[0].value + player.cards[1].value + player.cards[2].value > sum:
+                        print("Player wins double his bet back!")
+                        player.deposit(betting_amount*2)
+                    else:
+                        print("Dealer Wins! Players loses his bet")    
+
+            elif choice == "stay":
                 dealer.hit(deck.deal_one()) 
-                dealer.hit(deck.deal_one())
                 print(f"Dealer's face down card was: {dealer.cards[1]}")
-                print(f"Dealer's pulled card is: {dealer.cards[2]}")
-                if dealer.cards[0].value + dealer.cards[1].value + dealer.cards[2].value > 21:
-                    print("Dealer busted! Player gets double bet back")
-                    player.deposit(betting_amount*2)
-                elif player.cards[0].value + player.cards[1].value + player.cards[2].value > dealer.cards[0].value + dealer.cards[1].value + dealer.cards[2].value:
-                    print("Player wins double his bet back!")
-                    player.deposit(betting_amount*2)
+                sum = 0
+                for i in dealer.cards:
+                    sum += dealer.cards[i].value
+
+                if sum < 17:    
+                        while sum < 17:
+                            dealer.hit(deck.deal_one())
+                            for i in dealer.cards:
+                                sum += dealer.cards[i].value
+
+                            for i in dealer.cards:
+                                print(f"Dealer's pulled card is: {dealer.cards[i]}")
+                if sum > 21:
+                        print("Dealer busted! Player gets double bet back")
+                        player.deposit(betting_amount*2)
+                elif player.cards[0].value + player.cards[1].value > sum:
+                        print("Player wins double his bet back!")
+                        player.deposit(betting_amount*2)
                 else:
-                    print("Dealer Wins! Players loses his bet")    
+                        print("Dealer Wins! Players loses his bet")  
+            else:
+                 print("Please pick hit or stay")            
+            while choices:
+                    choice = input("play again or quit?")
+                    if choice == "play again":
+                        choices = False
+                        continue
+                    elif choice == "quit":
+                            choices = False
+                            game_on = False
+                            break
+                    else:
+                        print("please type either play again or quit")                        
+                
 
-        if choice == "stay":
-            dealer.hit(deck.deal_one()) 
-            print(f"Dealer's face down card was: {dealer.cards[1]}")
             
-
-        
 
 
 
