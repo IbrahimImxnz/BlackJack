@@ -46,8 +46,7 @@ class Player:
 
     def withdraw(self,amount):
         if self.balance >= amount:
-            self.balance -= amount
-            print("Withdrawal accepted")
+            return True
         else:
             return False
 
@@ -69,13 +68,13 @@ while game_on:
     while blc:
         bet = int(input("How much would you like to bet?"))
 
-        if bet > player.balance:
-             print("You are BROKE! please pick lower amount to bet on")
-             continue
-        else:
-            player.withdraw(bet)
+        if player.withdraw(bet):
+            player.balance -= bet
             blc = False
-            break
+            break 
+        else:
+            print("You are BROKE! please pick lower amount to bet on")
+            continue
 
     for i in range(2):
         player.hit(deck.deal_one())
@@ -92,10 +91,10 @@ while game_on:
 
         if dealer.cards[0].value + dealer.cards[1].value == 21:
             print("Push! You did not lose your bet, but you did not win the game!")
-            player.deposit(betting_amount)
+            player.deposit(bet)
         elif dealer.cards[0].value + dealer.cards[1].value != 21: 
             print("BLACKJACK! You get double your bet back!")
-            player.deposit(betting_amount*2)     
+            player.deposit(bet*2)     
         while choices:
                 choice = input("play again or quit?")
                 if choice == "play again":
@@ -116,7 +115,7 @@ while game_on:
                 print(f"The card that you got was: {player.cards[2]}")
                 if player.cards[0].value + player.cards[1].value + player.cards[2].value == 21:
                     print("BLACKJACK! Player wins double his bet back!")
-                    player.deposit(betting_amount*2)
+                    player.deposit(bet*2)
                 
                 if player.cards[0].value + player.cards[1].value + player.cards[2].value > 21:
                     print("Bust! Player loses his bet")
@@ -140,10 +139,10 @@ while game_on:
 
                     if sum > 21:
                         print("Dealer busted! Player gets double bet back")
-                        player.deposit(betting_amount*2)
+                        player.deposit(bet*2)
                     elif player.cards[0].value + player.cards[1].value + player.cards[2].value > sum:
                         print("Player wins double his bet back!")
-                        player.deposit(betting_amount*2)
+                        player.deposit(bet*2)
                     else:
                         print("Dealer Wins! Players loses his bet")    
                     while choices:
@@ -178,10 +177,10 @@ while game_on:
                                 print(f"Dealer's pulled card is: {dealer.cards[i]}")
                 if sum > 21:
                         print("Dealer busted! Player gets double bet back")
-                        player.deposit(betting_amount*2)
+                        player.deposit(bet*2)
                 elif player.cards[0].value + player.cards[1].value > sum:
                         print("Player wins double his bet back!")
-                        player.deposit(betting_amount*2)
+                        player.deposit(bet*2)
                 else:
                         print("Dealer Wins! Players loses his bet")  
                 while choices:
