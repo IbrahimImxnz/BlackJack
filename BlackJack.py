@@ -64,10 +64,18 @@ while game_on:
     balance = int(input("How much is your balance?"))
     player = Player(balance)
     dealer = Player(0)
+    blc = True
 
-    bet = int(input("How much would you like to bet?"))
+    while blc:
+        bet = int(input("How much would you like to bet?"))
 
-    betting_amount = player.withdraw(bet)
+        if bet > player.balance:
+             print("You are BROKE! please pick lower amount to bet on")
+             continue
+        else:
+            player.withdraw(bet)
+            blc = False
+            break
 
     for i in range(2):
         player.hit(deck.deal_one())
@@ -138,6 +146,20 @@ while game_on:
                         player.deposit(betting_amount*2)
                     else:
                         print("Dealer Wins! Players loses his bet")    
+                    while choices:
+                        choice = input("play again or quit?")
+                        if choice == "play again":
+                            choices = False
+                            play = False
+                            continue
+                        elif choice == "quit":
+                                choices = False
+                                play = False
+                                game_on = False
+                                break
+                        else:
+                            print("please type either play again or quit")                        
+                        
 
             elif choice == "stay":
                 dealer.hit(deck.deal_one()) 
@@ -162,20 +184,24 @@ while game_on:
                         player.deposit(betting_amount*2)
                 else:
                         print("Dealer Wins! Players loses his bet")  
-            else:
-                 print("Please pick hit or stay")            
-            while choices:
+                while choices:
                     choice = input("play again or quit?")
                     if choice == "play again":
                         choices = False
+                        play = False
                         continue
                     elif choice == "quit":
                             choices = False
+                            play = False
                             game_on = False
                             break
-                    else:
-                        print("please type either play again or quit")                        
-                
+                else:
+                     print("please type either play again or quit")                        
+                        
+            else:
+                 print("Please pick hit or stay")
+                 continue            
+            
 
             
 
