@@ -46,7 +46,17 @@ class Player:
 
     def deposit(self,amount):
         self.balance += amount
-        print("Money deposited")        
+        print("Money deposited") 
+
+    def Ace(self):
+         sum_of = 0
+         for i in self.cards:
+              sum_of += i.value
+         if sum_of >= 21:
+              for i in self.cards:
+                   if i.rank == "Ace":
+                        i.value = 1 
+                                   
 
 game_on = True
 choices = True
@@ -57,6 +67,8 @@ dealer = Player(0)
 
 while game_on: 
     deck = Deck()
+    player.cards = []
+    dealer.cards = []
     deck.shuffle()
     print(f"Your balance is now: {player.balance}")
     
@@ -109,9 +121,11 @@ while game_on:
                             break
                     
     else:
+        while True:    
             choice = input("Would you like to hit or stay? ")
             if choice == "hit":
                 player.hit(deck.deal_one())
+                player.Ace()
                 print(f"The card that you got was: {player.cards[2]}")
                 if player.cards[0].value + player.cards[1].value + player.cards[2].value == 21:
                     print("BLACKJACK! Player wins double his bet back!")
@@ -127,16 +141,20 @@ while game_on:
                 
                     sum = dealer.cards[0].value + dealer.cards[1].value
                     x = 1
-               
+                    
 
-                    if sum < 17:    
-                        while sum < 17:
+                    while True:
+                        if sum < 17:
                             dealer.hit(deck.deal_one())
+                            dealer.Ace()
                             x += 1
-                            print(f"Dealer got this card: {dealer.card[x]}")
+                            print(f"Dealer got this card: {dealer.cards[x]}")
                             for i in dealer.cards:
                                 sum += i.value
-
+                            continue    
+                        else:
+                            break
+                            
 
                     if sum > 21:
                         print("Dealer busted! Player gets double bet back")
@@ -160,7 +178,8 @@ while game_on:
                                 break
                              elif choice == "play again":
                                  
-                                 break                      
+                                 break 
+                break                                     
                         
 
             elif choice == "stay":
@@ -170,13 +189,17 @@ while game_on:
 
                 x = 1
 
-                if sum < 17:    
-                        while sum < 17:
+                while True:
+                        if sum < 17:
                             dealer.hit(deck.deal_one())
+                            dealer.Ace()
                             x += 1
-                            print(f"Dealer got this card: {dealer.card[x]}")
+                            print(f"Dealer got this card: {dealer.cards[x]}")
                             for i in dealer.cards:
                                 sum += i.value
+                            continue    
+                        else:
+                            break
 
                
 
@@ -203,6 +226,9 @@ while game_on:
                         elif choice == "play again":
                                 
                                 break
+                break 
+            else:
+                print("Please pick hit or stay!")        
                                   
                 
 
