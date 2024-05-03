@@ -1,6 +1,6 @@
 import random
 values = {'Two':2, 'Three':3, 'Four':4, 'Five':5, 'Six':6, 'Seven':7, 'Eight':8, 
-            'Nine':9, 'Ten':10, 'Jack':10, 'Queen':10, 'King':10, 'Ace':[1,11]}
+            'Nine':9, 'Ten':10, 'Jack':10, 'Queen':10, 'King':10, 'Ace': 11}
 suits = ('Hearts', 'Diamonds', 'Spades', 'Clubs')
 ranks = ('Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Jack', 'Queen', 'King', 'Ace')
 
@@ -51,17 +51,19 @@ class Player:
 game_on = True
 choices = True
 
-balance = int(input("How much is your balance?"))
+balance = int(input("How much is your balance? "))
+player = Player(balance)
+dealer = Player(0)
+
 while game_on: 
     deck = Deck()
     deck.shuffle()
-    player = Player(balance)
     print(f"Your balance is now: {player.balance}")
-    dealer = Player(0)
+    
 
     while True:
         try:
-            bet = int(input("How mucg would you like to bet"))
+            bet = int(input("How much would you like to bet? "))
         except ValueError:
              print("Please the bet must be an integer")
         else:
@@ -93,7 +95,7 @@ while game_on:
             player.deposit(bet*2)     
         while True:
                 try:
-                    choice = input("play again or quit?")
+                    choice = input("play again or quit? ")
                 except:
             
                     if choice != "play again" or "quit":
@@ -106,10 +108,8 @@ while game_on:
                        elif choice == "play again":
                             break
                     
-    elif player.cards[0].value + player.cards[1].value != 21:
-        play = True
-        while play:
-            choice = input("Would you like to hit or stay")
+    else:
+            choice = input("Would you like to hit or stay? ")
             if choice == "hit":
                 player.hit(deck.deal_one())
                 print(f"The card that you got was: {player.cards[2]}")
@@ -126,16 +126,17 @@ while game_on:
 
                 
                     sum = dealer.cards[0].value + dealer.cards[1].value
+                    x = 1
                
 
                     if sum < 17:    
                         while sum < 17:
                             dealer.hit(deck.deal_one())
+                            x += 1
+                            print(f"Dealer got this card: {dealer.card[x]}")
                             for i in dealer.cards:
                                 sum += i.value
 
-                    for i in dealer.cards:
-                        print(f"Dealer's pulled card is: {i}")
 
                     if sum > 21:
                         print("Dealer busted! Player gets double bet back")
@@ -145,19 +146,21 @@ while game_on:
                         player.deposit(bet*2)
                     else:
                         print("Dealer Wins! Players loses his bet")    
-                    while choices:
-                        choice = input("play again or quit?")
-                        if choice == "play again":
-                            choices = False
-                            play = False
-                            continue
-                        elif choice == "quit":
-                                choices = False
-                                play = False
+                while True:
+                         try:
+                            choice = input("play again or quit? ")
+                         except:
+            
+                            if choice != "play again" or "quit":
+                                print("Please pick play again or quit")
+                        
+                         else:
+                             if choice == "quit":
                                 game_on = False
                                 break
-                        else:
-                            print("please type either play again or quit")                        
+                             elif choice == "play again":
+                                 
+                                 break                      
                         
 
             elif choice == "stay":
@@ -165,14 +168,18 @@ while game_on:
                 print(f"Dealer's face down card was: {dealer.cards[1]}")
                 sum = dealer.cards[0].value + dealer.cards[1].value
 
+                x = 1
+
                 if sum < 17:    
                         while sum < 17:
                             dealer.hit(deck.deal_one())
+                            x += 1
+                            print(f"Dealer got this card: {dealer.card[x]}")
                             for i in dealer.cards:
                                 sum += i.value
 
-                            for i in dealer.cards:
-                                print(f"Dealer's pulled card is: {i}")
+               
+
                 if sum > 21:
                         print("Dealer busted! Player gets double bet back")
                         player.deposit(bet*2)
@@ -181,24 +188,23 @@ while game_on:
                         player.deposit(bet*2)
                 else:
                         print("Dealer Wins! Players loses his bet")  
-                while choices:
-                    choice = input("play again or quit?")
-                    if choice == "play again":
-                        choices = False
-                        play = False
-                        continue
-                    elif choice == "quit":
-                            choices = False
-                            play = False
-                            game_on = False
-                            break
-                else:
-                     print("please type either play again or quit")                        
-                        
-            else:
-                 print("Please pick hit or stay")
-                 continue            
-            
+                while True:
+                    try:
+                        choice = input("play again or quit? ")
+                    except:
+                
+                        if choice != "play again" or "quit":
+                            print("Please pick play again or quit")
+                            
+                    else:
+                        if choice == "quit":
+                                game_on = False
+                                break
+                        elif choice == "play again":
+                                
+                                break
+                                  
+                
 
             
 
