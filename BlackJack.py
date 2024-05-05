@@ -126,9 +126,98 @@ while game_on:
                     
     else:
         y = 0
-        while True:    
-            choice = input("Would you like to hit or stay? ")
-            if choice == "hit": 
+        game_further = True
+        while game_further:    
+            choice = input("Would you like to hit, stay, double down, split or surrender? ")
+            if choice == "double down":
+                if player.balance >= bet:
+                    print("Bet will be doubled!")
+                    player.balance -= bet
+                    player.hit(deck.deal_one())
+                    player.Ace()
+                    print(f"The card that you got was: {player.cards[y]}")
+                    if player.sum() == 21:
+                        print("BLACKJACK! Player wins double his bet back!")
+                        player.deposit(bet*4)
+                        while True:
+                            try:
+                                choicesec = input("play again or quit? ")
+                            except:
+                        
+                                if choicesec != "play again" or "quit":
+                                    print("Please pick play again or quit")
+                                    
+                            else:
+                                if choicesec == "quit":
+                                        game_further = False
+                                        game_on = False
+                                        break
+                                elif choicesec == "play again":
+                                        game_further = False
+                                        break
+                    if player.sum() > 21:
+                        print("Bust! Player loses his bet")
+                        while True:
+                            try:
+                                choicesec = input("play again or quit? ")
+                            except:
+                        
+                                if choicesec != "play again" or "quit":
+                                    print("Please pick play again or quit")
+                                    
+                            else:
+                                if choicesec == "quit":
+                                        game_further = False
+                                        game_on = False
+                                        break
+                                elif choicesec == "play again":
+                                        game_further = False
+                                        break
+                    elif player.sum() < 21:
+                        dealer.hit(deck.deal_one()) 
+                        print(f"Dealer's face down card was: {dealer.cards[1]}")
+                        x = 1
+                        while True:
+                            if dealer.sum() < 17:
+                                dealer.hit(deck.deal_one())
+                                dealer.Ace()
+                                x += 1
+                                print(f"Dealer got this card: {dealer.cards[x]}")
+                                continue    
+                            else:
+                                break
+                        if dealer.sum() > 21:
+                            print("Dealer busted! Player gets double bet back")
+                            player.deposit(bet*4)
+                        elif player.sum() > dealer.sum():
+                            print("Player wins double his bet back!")
+                            player.deposit(bet*4)
+                        else:
+                            print("Dealer Wins! Players loses his bet")  
+                        while True:
+                            try:
+                                choicesec = input("play again or quit? ")
+                            except:
+                        
+                                if choicesec != "play again" or "quit":
+                                    print("Please pick play again or quit")
+                                    
+                            else:
+                                if choicesec == "quit":
+                                        game_further = False
+                                        game_on = False
+                                        break
+                                elif choicesec == "play again":
+                                        game_further = False
+                                        break
+                 
+                else:
+                    print("You do not have enough money to double down!")
+                    continue
+            elif choice == "split":
+                 if player.cards[0].value == player.cards[1].value:
+                      pass              
+            elif choice == "hit": 
                 y += 1
                 player.hit(deck.deal_one())
                 player.Ace()
@@ -136,11 +225,41 @@ while game_on:
                 if player.sum() == 21:
                     print("BLACKJACK! Player wins double his bet back!")
                     player.deposit(bet*2)
-                    break
+                    while True:
+                        try:
+                            choicesec = input("play again or quit? ")
+                        except:
+                    
+                            if choicesec != "play again" or "quit":
+                                print("Please pick play again or quit")
+                                
+                        else:
+                            if choicesec == "quit":
+                                    game_further = False
+                                    game_on = False
+                                    break
+                            elif choicesec == "play again":
+                                    game_further = False
+                                    break
                 
                 if player.sum() > 21:
                     print("Bust! Player loses his bet")
-                    break
+                    while True:
+                        try:
+                                choicesec = input("play again or quit? ")
+                        except:
+                        
+                                if choicesec != "play again" or "quit":
+                                    print("Please pick play again or quit")
+                                    
+                        else:
+                                if choicesec == "quit":
+                                        game_further = False
+                                        game_on = False
+                                        break
+                                elif choicesec == "play again":
+                                        game_further = False
+                                        break
                 elif player.sum() < 21:
                     dealer.hit(deck.deal_one()) 
                 
@@ -162,9 +281,22 @@ while game_on:
                     if dealer.sum() > 21:
                         print("Dealer busted! Player gets double bet back")
                         player.deposit(bet*2)
-                        break
-                                                                 
-
+                        while True: 
+                            try:
+                                choicesec = input("play again or quit? ")
+                            except:
+                        
+                                if choicesec != "play again" or "quit":
+                                    print("Please pick play again or quit")
+                                    
+                            else:
+                                if choicesec == "quit":
+                                        game_further = False
+                                        game_on = False
+                                        break
+                                elif choicesec == "play again":
+                                        game_further = False
+                                        break
             elif choice == "stay":
                 index = 2
                 if index > len(dealer.cards):
@@ -194,23 +326,23 @@ while game_on:
                 else:
                         print("Dealer Wins! Players loses his bet")  
                 while True:
-                    try:
-                        choice = input("play again or quit? ")
-                    except:
-                
-                        if choice != "play again" or "quit":
-                            print("Please pick play again or quit")
-                            
-                    else:
-                        if choice == "quit":
-                                game_on = False
-                                break
-                        elif choice == "play again":
-                                
-                                break
-                break 
+                            try:
+                                choicesec = input("play again or quit? ")
+                            except:
+                        
+                                if choicesec != "play again" or "quit":
+                                    print("Please pick play again or quit")
+                                    
+                            else:
+                                if choicesec == "quit":
+                                        game_further = False
+                                        game_on = False
+                                        break
+                                elif choicesec == "play again":
+                                        game_further = False
+                                        break
             else:
-                print("Please pick hit or stay!")        
+                print("Please pick one of the options!")        
                                   
                 
 
