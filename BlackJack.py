@@ -60,7 +60,15 @@ class Player:
               for i in self.cards:
                    if i.rank == "Ace":
                         i.value = 1 
-                                   
+
+class Split(Player):
+    def __init__(self,cards):
+         self.cards = cards
+
+    def __str__(self):
+        for i in self.cards:
+            return i   
+                                           
 
 game_on = True
 choices = True
@@ -214,12 +222,34 @@ while game_on:
                 else:
                     print("You do not have enough money to double down!")
                     continue
+
             elif choice == "split":
                  if player.cards[0].value == player.cards[1].value:
-                      pass 
+                      print("You will have two separate hands now! and a new bet with same amount will be placed")
+                      if player.balance >= bet:
+                           player.balance -= bet
+                           player.hit(deck.deal_one())
+                           player.hit(deck.deal_one())
+                           split1 = Split(player.balance,[player.card[0],player.card[2]]) 
+                           split2 = Split(player.balance,[player.card[1],player.card[3]])
+                           print(f"Player's first hand consists of: {split1}")
+                           print(f"Player's second hand consists of: {split2}")
+                           if split1.sum() == 21:
+                                print("BLACKJACK! you get double your bet back!")
+                                player.deposit(bet*2)
+                          # else:
+                                choicex = input("Would you like to hit, stay, double down or surrender?")
+                              #  while True:
+                             #       if choicex == "hit":
+                                         
+                                              
+                          # if split2.sum() == 21:
+                           #     print("BLACKJACK! you get double your bet back!")
+                            #    player.deposit(bet*2)     
+                                
             elif choice == "surrender":
                 print("You surrendered and half your bet will return to your balance you COWARD")
-                player.deposit(bet*0.5)
+                player.deposit(bet*1/2)
                 while True:
                         try:
                             choicesec = input("play again or quit? ")
