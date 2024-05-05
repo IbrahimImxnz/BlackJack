@@ -216,7 +216,27 @@ while game_on:
                     continue
             elif choice == "split":
                  if player.cards[0].value == player.cards[1].value:
-                      pass              
+                      pass 
+            elif choice == "surrender":
+                print("You surrendered and half your bet will return to your balance you COWARD")
+                player.deposit(bet*0.5)
+                while True:
+                        try:
+                            choicesec = input("play again or quit? ")
+                        except:
+                    
+                            if choicesec != "play again" or "quit":
+                                print("Please pick play again or quit")
+                                
+                        else:
+                            if choicesec == "quit":
+                                    game_further = False
+                                    game_on = False
+                                    break
+                            elif choicesec == "play again":
+                                    game_further = False
+                                    break
+
             elif choice == "hit": 
                 y += 1
                 player.hit(deck.deal_one())
