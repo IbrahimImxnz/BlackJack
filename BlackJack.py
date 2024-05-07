@@ -64,16 +64,16 @@ class Player:
 class Split(Player):
     def __init__(self,cards):
          self.cards = cards
+         self.cards = []
 
     def __str__(self):
         for i in self.cards:
             return i   
                                            
-def hit(object,object2,object3,object4,object5):
-    object5 += 1
+def hit(object,object2,object3,object4):
     object.hit(object3.deal_one())
     object.Ace()
-    print(f"The card that you got was: {object.cards[object5]}")
+    print(f"The card that you got was: {object.cards[-1]}")
     if object.sum() == 21:
         print("BLACKJACK! Player wins double his bet back!")
         object.deposit(object4*2)
@@ -139,13 +139,13 @@ def stay(object1,object2,object3,object4):
             print("Dealer Wins! Players loses his bet")
             return True  
 
-def double_down(object1,object2,object3,object4,object5):
+def double_down(object1,object2,object3,object5):
     if object1.balance >= object3:
         print("Bet will be doubled!")
         object1.balance -= object3
         object1.hit(object2.deal_one())
         object1.Ace()
-        print(f"The card that you got was: {object1.cards[object4]}")
+        print(f"The card that you got was: {object1.cards[-1]}")
         if object1.sum() == 21:
             print("BLACKJACK! Player wins double his bet back!")
             object1.deposit(object3*4)
@@ -243,12 +243,12 @@ while game_on:
                             break
                     
     else:
-        y = 1
+        
         game_further = True
         while game_further:    
             choice = input("Would you like to hit, stay, double down, split or surrender? ")
             if choice == "double down":
-                if double_down(player,deck,bet,y,dealer):
+                if double_down(player,deck,bet,dealer):
                       while True:
                         try:
                             choice = input("play again or quit? ")
@@ -265,28 +265,423 @@ while game_on:
                                     break
 
             elif choice == "split":
-                 if player.cards[0].value == player.cards[1].value:
+                    if player.cards[0].value == player.cards[1].value:
                       print("You will have two separate hands now! and a new bet with same amount will be placed")
                       if player.balance >= bet:
                            player.balance -= bet
                            player.hit(deck.deal_one())
                            player.hit(deck.deal_one())
-                           split1 = Split(player.balance,[player.card[0],player.card[2]]) 
-                           split2 = Split(player.balance,[player.card[1],player.card[3]])
+                           split1 = Split(player.balance,[player.cards[0],player.cards[2]]) 
+                           split2 = Split(player.balance,[player.cards[1],player.cards[3]])
                            print(f"Player's first hand consists of: {split1}")
                            print(f"Player's second hand consists of: {split2}")
                            if split1.sum() == 21:
                                 print("BLACKJACK! you get double your bet back!")
                                 player.deposit(bet*2)
-                          # else:
-                                choicex = input("Would you like to hit, stay, double down or surrender?")
-                              #  while True:
-                             #       if choicex == "hit":
-                                         
-                                              
-                          # if split2.sum() == 21:
-                           #     print("BLACKJACK! you get double your bet back!")
-                            #    player.deposit(bet*2)     
+                           if split1.sum() != 21 and split2.sum() != 21:
+                                print("Now playing for first deck")
+                                gamex = True
+                                while gamex:
+                                    choicex = input("Would you like to hit, stay, double down or surrender?")
+                                    if choicex == "hit":
+                                         if hit(split1,dealer,deck,bet):
+                                            print("Now playing for second deck")
+                                            print(f"Player's second hand consists of: {split2}")
+                                            gamey = True
+                                            while gamey:
+                                                choicey = input("Would you like to hit, stay, double down or surrender?")
+                                                if choicey == "hit":
+                                                     if hit(split2,dealer,deck,bet):
+                                                          while True:
+                                                            try:
+                                                                choicesec = input("play again or quit? ")
+                                                            except:
+                                                        
+                                                                if choicesec != "play again" or "quit":
+                                                                    print("Please pick play again or quit")
+                                                                    
+                                                            else:
+                                                                if choicesec == "quit":
+                                                                        game_further = False
+                                                                        game_on = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                                                elif choicesec == "play again":
+                                                                        game_further = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                                elif choicey == "stay":
+                                                     if stay(split2,dealer,deck,bet):
+                                                         while True:
+                                                            try:
+                                                                choicesec = input("play again or quit? ")
+                                                            except:
+                                                        
+                                                                if choicesec != "play again" or "quit":
+                                                                    print("Please pick play again or quit")
+                                                                    
+                                                            else:
+                                                                if choicesec == "quit":
+                                                                        game_further = False
+                                                                        game_on = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                                                elif choicesec == "play again":
+                                                                        game_further = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                                elif choicey == "double down":
+                                                     if double_down(split2,deck,bet,dealer):
+                                                          while True:
+                                                            try:
+                                                                choicesec = input("play again or quit? ")
+                                                            except:
+                                                        
+                                                                if choicesec != "play again" or "quit":
+                                                                    print("Please pick play again or quit")
+                                                                    
+                                                            else:
+                                                                if choicesec == "quit":
+                                                                        game_further = False
+                                                                        game_on = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                                                elif choicesec == "play again":
+                                                                        game_further = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                                elif choicey == "surrender":
+                                                    print("You surrendered and half your bet will return to your balance you COWARD")
+                                                    player.deposit(bet*1/2)
+                                                    while True:
+                                                            try:
+                                                                choicesec = input("play again or quit? ")
+                                                            except:
+                                                        
+                                                                if choicesec != "play again" or "quit":
+                                                                    print("Please pick play again or quit")
+                                                                    
+                                                            else:
+                                                                if choicesec == "quit":
+                                                                        game_further = False
+                                                                        game_on = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                                                elif choicesec == "play again":
+                                                                        game_further = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break 
+                                                else:
+                                                 print("please pick one of the options")                                                                
+                                                          
+                                                
+                                    elif choicex == "stay":
+                                         if stay(split1,dealer,deck,bet):
+                                            print("Now playing for second deck")
+                                            print(f"Player's second hand consists of: {split2}")
+                                            gamey = True
+                                            while gamey:
+                                                choicey = input("Would you like to hit, stay, double down or surrender?")
+                                                if choicey == "hit":
+                                                     if hit(split2,dealer,deck,bet):
+                                                          while True:
+                                                            try:
+                                                                choicesec = input("play again or quit? ")
+                                                            except:
+                                                        
+                                                                if choicesec != "play again" or "quit":
+                                                                    print("Please pick play again or quit")
+                                                                    
+                                                            else:
+                                                                if choicesec == "quit":
+                                                                        game_further = False
+                                                                        game_on = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                                                elif choicesec == "play again":
+                                                                        game_further = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                                elif choicey == "stay":
+                                                     if stay(split2,dealer,deck,bet):
+                                                         while True:
+                                                            try:
+                                                                choicesec = input("play again or quit? ")
+                                                            except:
+                                                        
+                                                                if choicesec != "play again" or "quit":
+                                                                    print("Please pick play again or quit")
+                                                                    
+                                                            else:
+                                                                if choicesec == "quit":
+                                                                        game_further = False
+                                                                        game_on = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                                                elif choicesec == "play again":
+                                                                        game_further = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                                elif choicey == "double down":
+                                                     if double_down(split2,deck,bet,dealer):
+                                                          while True:
+                                                            try:
+                                                                choicesec = input("play again or quit? ")
+                                                            except:
+                                                        
+                                                                if choicesec != "play again" or "quit":
+                                                                    print("Please pick play again or quit")
+                                                                    
+                                                            else:
+                                                                if choicesec == "quit":
+                                                                        game_further = False
+                                                                        game_on = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                                                elif choicesec == "play again":
+                                                                        game_further = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                                elif choicey == "surrender":
+                                                    print("You surrendered and half your bet will return to your balance you COWARD")
+                                                    player.deposit(bet*1/2)
+                                                    while True:
+                                                            try:
+                                                                choicesec = input("play again or quit? ")
+                                                            except:
+                                                        
+                                                                if choicesec != "play again" or "quit":
+                                                                    print("Please pick play again or quit")
+                                                                    
+                                                            else:
+                                                                if choicesec == "quit":
+                                                                        game_further = False
+                                                                        game_on = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                                                elif choicesec == "play again":
+                                                                        game_further = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break 
+                                                else:
+                                                 print("please pick one of the options")                
+                                    elif choicex == "double down":
+                                        if double_down(split1,deck,bet,dealer):
+                                            print("Now playing for second deck")
+                                            print(f"Player's second hand consists of: {split2}")
+                                            gamey = True
+                                            while gamey:
+                                                choicey = input("Would you like to hit, stay, double down or surrender?")
+                                                if choicey == "hit":
+                                                        if hit(split2,dealer,deck,bet):
+                                                            while True:
+                                                                try:
+                                                                    choicesec = input("play again or quit? ")
+                                                                except:
+                                                            
+                                                                    if choicesec != "play again" or "quit":
+                                                                        print("Please pick play again or quit")
+                                                                        
+                                                                else:
+                                                                    if choicesec == "quit":
+                                                                            game_further = False
+                                                                            game_on = False
+                                                                            gamex = False
+                                                                            gamey = False
+                                                                            break
+                                                                    elif choicesec == "play again":
+                                                                            game_further = False
+                                                                            gamex = False
+                                                                            gamey = False
+                                                                            break
+                                                elif choicey == "stay":
+                                                        if stay(split2,dealer,deck,bet):
+                                                            while True:
+                                                                try:
+                                                                    choicesec = input("play again or quit? ")
+                                                                except:
+                                                            
+                                                                    if choicesec != "play again" or "quit":
+                                                                        print("Please pick play again or quit")
+                                                                        
+                                                                else:
+                                                                    if choicesec == "quit":
+                                                                            game_further = False
+                                                                            game_on = False
+                                                                            gamex = False
+                                                                            gamey = False
+                                                                            break
+                                                                    elif choicesec == "play again":
+                                                                            game_further = False
+                                                                            gamex = False
+                                                                            gamey = False
+                                                                            break
+                                                elif choicey == "double down":
+                                                        if double_down(split2,deck,bet,dealer):
+                                                            while True:
+                                                                try:
+                                                                    choicesec = input("play again or quit? ")
+                                                                except:
+                                                            
+                                                                    if choicesec != "play again" or "quit":
+                                                                        print("Please pick play again or quit")
+                                                                        
+                                                                else:
+                                                                    if choicesec == "quit":
+                                                                            game_further = False
+                                                                            game_on = False
+                                                                            gamex = False
+                                                                            gamey = False
+                                                                            break
+                                                                    elif choicesec == "play again":
+                                                                            game_further = False
+                                                                            gamex = False
+                                                                            gamey = False
+                                                                            break
+                                                elif choicey == "surrender":
+                                                    print("You surrendered and half your bet will return to your balance you COWARD")
+                                                    player.deposit(bet*1/2)
+                                                    while True:
+                                                            try:
+                                                                choicesec = input("play again or quit? ")
+                                                            except:
+                                                        
+                                                                if choicesec != "play again" or "quit":
+                                                                    print("Please pick play again or quit")
+                                                                    
+                                                            else:
+                                                                if choicesec == "quit":
+                                                                        game_further = False
+                                                                        game_on = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                                                elif choicesec == "play again":
+                                                                        game_further = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                                else:
+                                                 print("please pick one of the options")                
+                                    elif choicex == "surrender":
+                                        print("You surrendered and half your bet will return to your balance you COWARD")
+                                        player.deposit(bet*1/2)
+                                        print("Now playing for second deck")
+                                        print(f"Player's second hand consists of: {split2}")
+                                        gamey = True
+                                        while gamey:
+                                            choicey = input("Would you like to hit, stay, double down or surrender?")
+                                            if choicey == "hit":
+                                                    if hit(split2,dealer,deck,bet):
+                                                        while True:
+                                                            try:
+                                                                choicesec = input("play again or quit? ")
+                                                            except:
+                                                        
+                                                                if choicesec != "play again" or "quit":
+                                                                    print("Please pick play again or quit")
+                                                                    
+                                                            else:
+                                                                if choicesec == "quit":
+                                                                        game_further = False
+                                                                        game_on = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                                                elif choicesec == "play again":
+                                                                        game_further = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                            elif choicey == "stay":
+                                                    if stay(split2,dealer,deck,bet):
+                                                        while True:
+                                                            try:
+                                                                choicesec = input("play again or quit? ")
+                                                            except:
+                                                        
+                                                                if choicesec != "play again" or "quit":
+                                                                    print("Please pick play again or quit")
+                                                                    
+                                                            else:
+                                                                if choicesec == "quit":
+                                                                        game_further = False
+                                                                        game_on = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                                                elif choicesec == "play again":
+                                                                        game_further = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                            elif choicey == "double down":
+                                                    if double_down(split2,deck,bet,dealer):
+                                                        while True:
+                                                            try:
+                                                                choicesec = input("play again or quit? ")
+                                                            except:
+                                                        
+                                                                if choicesec != "play again" or "quit":
+                                                                    print("Please pick play again or quit")
+                                                                    
+                                                            else:
+                                                                if choicesec == "quit":
+                                                                        game_further = False
+                                                                        game_on = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                                                elif choicesec == "play again":
+                                                                        game_further = False
+                                                                        gamex = False
+                                                                        gamey = False
+                                                                        break
+                                            elif choicey == "surrender":
+                                                print("You surrendered and half your bet will return to your balance you COWARD")
+                                                player.deposit(bet*1/2)
+                                                while True:
+                                                        try:
+                                                            choicesec = input("play again or quit? ")
+                                                        except:
+                                                    
+                                                            if choicesec != "play again" or "quit":
+                                                                print("Please pick play again or quit")
+                                                                
+                                                        else:
+                                                            if choicesec == "quit":
+                                                                    game_further = False
+                                                                    game_on = False
+                                                                    gamex = False
+                                                                    gamey = False
+                                                                    break
+                                                            elif choicesec == "play again":
+                                                                    game_further = False
+                                                                    gamex = False
+                                                                    gamey = False
+                                                                    break                                                        
+                                            else:
+                                                 print("please pick one of the options")
+                                    else:
+                                                 print("please pick one of the options")
+                    else:
+                         print("You do not have duplicate cards!")                                          
                                 
             elif choice == "surrender":
                 print("You surrendered and half your bet will return to your balance you COWARD")
@@ -309,7 +704,7 @@ while game_on:
                                     break
 
             elif choice == "hit": 
-                if hit(player,dealer,deck,bet,y):
+                if hit(player,dealer,deck,bet):
                      while True:
                             try:
                                 choicesec = input("play again or quit? ")
